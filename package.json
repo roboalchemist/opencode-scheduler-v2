@@ -1,6 +1,6 @@
 {
   "name": "opencode-scheduler-v2",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "OpenCode v2 plugin adapter for opencode-scheduler (cron/launchd/systemd scheduled jobs). Runs the unchanged v1 engine on OpenCode 2.x.",
   "keywords": [
     "opencode",

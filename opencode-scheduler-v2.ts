@@ -1,9 +1,18 @@
 import { z } from "zod"
 import SchedulerPlugin from "opencode-scheduler"
 
+// One engine per process: OpenCode loads a plugin once per location/workspace,
+// and repeated loads would register duplicate tool sets.
+let instanceActive = false
+
 export default {
-  id: "local.v2.scheduler",
+  id: "opencode-scheduler-v2",
   setup: async (context: any) => {
+    if (instanceActive) {
+      console.error("[scheduler-v2] duplicate instance in this process - skipping (singleton)")
+      return () => {}
+    }
+    instanceActive = true
     try {
       const hooks = await (SchedulerPlugin as any)()
       const toolDefs: Record<string, any> = hooks?.tool ?? {}
@@ -28,7 +37,8 @@ export default {
       })
     } catch (e) {
       console.error("[scheduler-v2] setup failed:", e)
+      instanceActive = false
     }
-    return () => {}
+    return () => { instanceActive = false }
   },
 }
